@@ -36,6 +36,7 @@
             z-index: 1000;
             box-shadow: 0 4px 20px rgba(0,0,0,0.15);
             backdrop-filter: blur(10px);
+            transition: background-color 0.3s ease;
         }
 
         nav {
@@ -414,13 +415,18 @@
             gap: 8px;
         }
 
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
         .btn-primary {
             background: linear-gradient(45deg, #8B4513, #D2691E);
             color: white;
             box-shadow: 0 4px 15px rgba(139,69,19,0.3);
         }
 
-        .btn-primary:hover {
+        .btn-primary:hover:not(:disabled) {
             background: linear-gradient(45deg, #6B3410, #B8571C);
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(139,69,19,0.4);
@@ -432,7 +438,7 @@
             border: 2px solid #8B4513;
         }
 
-        .btn-outline:hover {
+        .btn-outline:hover:not(:disabled) {
             background: #8B4513;
             color: white;
             transform: translateY(-2px);
@@ -596,6 +602,50 @@
             font-size: 4rem;
             margin-bottom: 1rem;
             color: #bdc3c7;
+        }
+
+        /* About Section */
+        .about {
+            padding: 100px 0;
+            background: #f8f9fa;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 2rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: #8B4513;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .feature-description {
+            color: #7f8c8d;
+            line-height: 1.6;
         }
 
         /* Contact Section */
@@ -843,7 +893,7 @@
                 <li><a href="#about">Tentang Kami</a></li>
                 <li><a href="#contact">Kontak</a></li>
             </ul>
-            <div class="cart-icon" onclick="toggleCart()">
+            <div class="cart-icon" onclick="CartManager.toggleCart()">
                 <i class="fas fa-shopping-cart"></i>
                 <span class="cart-count" id="cartCount">0</span>
             </div>
@@ -880,17 +930,12 @@
             
             <!-- Search Box -->
             <div class="search-box">
-                <input type="text" class="search-input" id="searchInput" placeholder="Cari furniture impian Anda..." onkeyup="searchProducts()">
+                <input type="text" class="search-input" id="searchInput" placeholder="Cari furniture impian Anda..." onkeyup="ProductManager.searchProducts()">
             </div>
 
             <!-- Product Filters -->
-            <div class="product-filters">
-                <div class="filter-btn active" data-filter="all">Semua Produk</div>
-                <div class="filter-btn" data-filter="sofa">Sofa & Kursi</div>
-                <div class="filter-btn" data-filter="bedroom">Kamar Tidur</div>
-                <div class="filter-btn" data-filter="dining">Meja Makan</div>
-                <div class="filter-btn" data-filter="storage">Storage</div>
-                <div class="filter-btn" data-filter="office">Kantor</div>
+            <div class="product-filters" id="productFilters">
+                <!-- Filters will be dynamically generated -->
             </div>
 
             <!-- Products Grid -->
@@ -901,17 +946,27 @@
     </section>
 
     <!-- About Section -->
-    <section class="about" id="about" style="padding: 100px 0; background: #f8f9fa;">
+    <section class="about" id="about">
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">Tentang Gaco</h2>
                 <p class="section-subtitle">Lebih dari 10 tahun pengalaman dalam industri furniture premium</p>
             </div>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 3rem; margin-top: 4rem;">
-                <div style="text-align: center; padding: 2rem;">
-                    <i class="fas fa-headset" style="font-size: 3rem; color: #8B4513; margin-bottom: 1rem;"></i>
-                    <h3 style="color: #2c3e50; margin-bottom: 1rem;">Layanan 24/7</h3>
-                    <p style="color: #7f8c8d;">Customer service siap membantu Anda kapan saja</p>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-award feature-icon"></i>
+                    <h3 class="feature-title">Kualitas Premium</h3>
+                    <p class="feature-description">Menggunakan bahan berkualitas tinggi dan craftsmanship terbaik untuk furniture yang tahan lama</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-truck feature-icon"></i>
+                    <h3 class="feature-title">Pengiriman Aman</h3>
+                    <p class="feature-description">Jaminan pengiriman aman ke seluruh Indonesia dengan packaging khusus furniture</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-headset feature-icon"></i>
+                    <h3 class="feature-title">Layanan 24/7</h3>
+                    <p class="feature-description">Customer service profesional siap membantu Anda kapan saja dengan respon cepat</p>
                 </div>
             </div>
         </div>
@@ -923,10 +978,10 @@
             <div class="contact-content">
                 <h2 class="section-title" style="color: white;">Hubungi Kami</h2>
                 <p style="font-size: 1.2rem; margin-bottom: 2rem;">Konsultasi gratis untuk furniture impian Anda. Tim ahli kami siap membantu!</p>
-                <a href="https://wa.me/6288223055352?text=Halo%20Gaco%2C%20saya%20tertarik%20dengan%20koleksi%20furniture%20Anda.%20Mohon%20info%20lebih%20lanjut." 
+                <a href="https://wa.me/62085183040355?text=Halo%20Gaco%2C%20saya%20tertarik%20dengan%20koleksi%20furniture%20Anda.%20Mohon%20info%20lebih%20lanjut." 
                    class="whatsapp-btn" target="_blank">
                     <i class="fab fa-whatsapp"></i>
-                    WhatsApp: 088223055352
+                    WhatsApp: 085183040355
                 </a>
             </div>
         </div>
@@ -956,7 +1011,7 @@
                 </div>
                 <div class="footer-section">
                     <h3>Kontak</h3>
-                    <p><i class="fab fa-whatsapp"></i> 088223055352</p>
+                    <p><i class="fab fa-whatsapp"></i> 085183040355</p>
                     <p><i class="fas fa-envelope"></i> info@gaco.co.id</p>
                     <p><i class="fas fa-map-marker-alt"></i> Indonesia</p>
                 </div>
@@ -970,27 +1025,34 @@
     <!-- Cart Modal -->
     <div class="modal" id="cartModal">
         <div class="modal-content">
-            <span class="close-modal" onclick="toggleCart()">&times;</span>
+            <span class="close-modal" onclick="CartManager.toggleCart()">&times;</span>
             <h2 style="color: #8B4513; margin-bottom: 2rem;"><i class="fas fa-shopping-cart"></i> Keranjang Belanja</h2>
             <div id="cartItems"></div>
             <div class="cart-total">
                 <strong>Total Pembayaran: Rp <span id="cartTotal">0</span></strong>
             </div>
-            <button class="btn btn-primary" onclick="checkout()" style="width: 100%; margin-top: 1.5rem; font-size: 1.1rem;">
+            <button class="btn btn-primary" onclick="CartManager.checkout()" style="width: 100%; margin-top: 1.5rem; font-size: 1.1rem;">
                 <i class="fab fa-whatsapp"></i> Pesan via WhatsApp
             </button>
         </div>
     </div>
 
     <!-- Floating WhatsApp -->
-    <a href="https://wa.me/6288223055352?text=Halo%20Gaco%2C%20saya%20tertarik%20dengan%20koleksi%20furniture%20Anda.%20Mohon%20info%20lebih%20lanjut." 
+    <a href="https://wa.me/62085183040355?text=Halo%20Gaco%2C%20saya%20tertarik%20dengan%20koleksi%20furniture%20Anda.%20Mohon%20info%20lebih%20lanjut." 
        class="floating-whatsapp" target="_blank" title="Chat WhatsApp">
         <i class="fab fa-whatsapp"></i>
     </a>
 
     <script>
+        // Configuration
+        const CONFIG = {
+            PHONE_NUMBER: '62085183040355',
+            COMPANY_NAME: 'Gaco',
+            CONTACT_MESSAGE: 'Halo Gaco, saya tertarik dengan koleksi furniture Anda. Mohon info lebih lanjut.'
+        };
+
         // Sample furniture products data
-        const products = [
+        const PRODUCTS_DATA = [
             {
                 id: 1,
                 title: "Sofa Minimalis 3 Seater",
@@ -1113,229 +1175,158 @@
             }
         ];
 
-        let cart = [];
-        let currentFilter = 'all';
+        // Category configuration
+        const CATEGORIES = {
+            all: 'Semua Produk',
+            sofa: 'Sofa & Kursi',
+            bedroom: 'Kamar Tidur',
+            dining: 'Meja Makan',
+            storage: 'Storage',
+            office: 'Kantor'
+        };
 
-        // Initialize the website
-        document.addEventListener('DOMContentLoaded', function() {
-            displayProducts(products);
-            setupEventListeners();
-            updateCartCount();
-        });
+        // Product Manager Class
+        class ProductManager {
+            constructor() {
+                this.products = PRODUCTS_DATA;
+                this.currentFilter = 'all';
+                this.filteredProducts = [...this.products];
+            }
 
-        // Setup event listeners
-        function setupEventListeners() {
-            // Filter buttons
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    currentFilter = this.dataset.filter;
-                    filterProducts();
+            static getInstance() {
+                if (!ProductManager.instance) {
+                    ProductManager.instance = new ProductManager();
+                }
+                return ProductManager.instance;
+            }
+
+            init() {
+                this.renderFilters();
+                this.displayProducts(this.products);
+                this.setupEventListeners();
+            }
+
+            renderFilters() {
+                const filtersContainer = document.getElementById('productFilters');
+                filtersContainer.innerHTML = '';
+
+                Object.entries(CATEGORIES).forEach(([key, name]) => {
+                    const filterBtn = document.createElement('div');
+                    filterBtn.className = `filter-btn ${key === 'all' ? 'active' : ''}`;
+                    filterBtn.dataset.filter = key;
+                    filterBtn.textContent = name;
+                    filterBtn.addEventListener('click', () => this.handleFilterClick(filterBtn));
+                    filtersContainer.appendChild(filterBtn);
                 });
-            });
+            }
 
-            // Smooth scroll for navigation
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const target = document.querySelector(this.getAttribute('href'));
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }
+            handleFilterClick(clickedBtn) {
+                // Update active state
+                document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                clickedBtn.classList.add('active');
+                
+                this.currentFilter = clickedBtn.dataset.filter;
+                this.applyFilters();
+            }
+
+            applyFilters() {
+                let filtered = [...this.products];
+                
+                // Apply category filter
+                if (this.currentFilter !== 'all') {
+                    filtered = filtered.filter(product => product.category === this.currentFilter);
+                }
+                
+                // Apply search filter
+                const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+                if (searchTerm) {
+                    filtered = filtered.filter(product => 
+                        product.title.toLowerCase().includes(searchTerm) ||
+                        product.description.toLowerCase().includes(searchTerm) ||
+                        CATEGORIES[product.category].toLowerCase().includes(searchTerm)
+                    );
+                }
+                
+                this.filteredProducts = filtered;
+                this.displayProducts(this.filteredProducts);
+            }
+
+            searchProducts() {
+                this.applyFilters();
+            }
+
+            displayProducts(products) {
+                const grid = document.getElementById('productsGrid');
+                
+                if (products.length === 0) {
+                    grid.innerHTML = `
+                        <div style="grid-column: 1/-1; text-align: center; padding: 4rem;">
+                            <i class="fas fa-search" style="font-size: 4rem; color: #bdc3c7; margin-bottom: 1rem;"></i>
+                            <h3 style="color: #7f8c8d; margin-bottom: 0.5rem;">Tidak ada produk ditemukan</h3>
+                            <p style="color: #95a5a6;">Coba ubah kata kunci pencarian atau filter kategori</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                grid.innerHTML = '';
+                products.forEach(product => {
+                    const productCard = this.createProductCard(product);
+                    grid.appendChild(productCard);
                 });
-            });
-        }
+            }
 
-        // Display products
-        function displayProducts(productsToShow) {
-            const grid = document.getElementById('productsGrid');
-            grid.innerHTML = '';
-
-            productsToShow.forEach(product => {
-                const productCard = document.createElement('div');
-                productCard.className = 'product-card';
-                productCard.innerHTML = `
+            createProductCard(product) {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
                     <div class="product-image">
                         ${product.image}
                         ${product.badge ? `<div class="product-badge">${product.badge}</div>` : ''}
                     </div>
                     <div class="product-info">
-                        <div class="product-category">${getCategoryName(product.category)}</div>
+                        <div class="product-category">${CATEGORIES[product.category]}</div>
                         <h3 class="product-title">${product.title}</h3>
                         <p class="product-description">${product.description}</p>
                         <div class="product-price">
-                            Rp ${product.price.toLocaleString()}
-                            ${product.originalPrice ? `<span class="original-price">Rp ${product.originalPrice.toLocaleString()}</span>` : ''}
+                            Rp ${this.formatPrice(product.price)}
+                            ${product.originalPrice ? `<span class="original-price">Rp ${this.formatPrice(product.originalPrice)}</span>` : ''}
                         </div>
                         <div class="product-actions">
-                            <button class="btn btn-primary" onclick="addToCart(${product.id})">
+                            <button class="btn btn-primary" onclick="CartManager.getInstance().addToCart(${product.id})" data-product-id="${product.id}">
                                 <i class="fas fa-shopping-cart"></i> Tambah
                             </button>
-                            <button class="btn btn-outline" onclick="buyNow(${product.id})">
+                            <button class="btn btn-outline" onclick="ProductManager.buyNow(${product.id})">
                                 <i class="fab fa-whatsapp"></i> Beli
                             </button>
                         </div>
                     </div>
                 `;
-                grid.appendChild(productCard);
-            });
-        }
-
-        // Get category display name
-        function getCategoryName(category) {
-            const categoryNames = {
-                'sofa': 'Sofa & Kursi',
-                'bedroom': 'Kamar Tidur',
-                'dining': 'Meja Makan',
-                'storage': 'Storage',
-                'office': 'Kantor'
-            };
-            return categoryNames[category] || category;
-        }
-
-        // Filter products
-        function filterProducts() {
-            let filteredProducts = products;
-            
-            if (currentFilter !== 'all') {
-                filteredProducts = products.filter(product => product.category === currentFilter);
-            }
-            
-            displayProducts(filteredProducts);
-        }
-
-        // Search products
-        function searchProducts() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            let filteredProducts = products.filter(product => 
-                product.title.toLowerCase().includes(searchTerm) ||
-                product.description.toLowerCase().includes(searchTerm) ||
-                getCategoryName(product.category).toLowerCase().includes(searchTerm)
-            );
-
-            if (currentFilter !== 'all') {
-                filteredProducts = filteredProducts.filter(product => product.category === currentFilter);
+                return card;
             }
 
-            displayProducts(filteredProducts);
-        }
-
-        // Add to cart
-        function addToCart(productId) {
-            const product = products.find(p => p.id === productId);
-            const existingItem = cart.find(item => item.id === productId);
-
-            if (existingItem) {
-                existingItem.quantity += 1;
-            } else {
-                cart.push({...product, quantity: 1});
+            formatPrice(price) {
+                return new Intl.NumberFormat('id-ID').format(price);
             }
 
-            updateCartCount();
-            showNotification(`${product.title} berhasil ditambahkan ke keranjang!`);
-        }
+            getProductById(id) {
+                return this.products.find(product => product.id === id);
+            }
 
-        // Remove from cart
-        function removeFromCart(productId) {
-            const product = cart.find(item => item.id === productId);
-            cart = cart.filter(item => item.id !== productId);
-            updateCartCount();
-            displayCartItems();
-            showNotification(`${product.title} dihapus dari keranjang`, 'info');
-        }
-
-        // Update quantity
-        function updateQuantity(productId, change) {
-            const item = cart.find(item => item.id === productId);
-            if (item) {
-                item.quantity += change;
-                if (item.quantity <= 0) {
-                    removeFromCart(productId);
-                } else {
-                    updateCartCount();
-                    displayCartItems();
+            static buyNow(productId) {
+                const instance = ProductManager.getInstance();
+                const product = instance.getProductById(productId);
+                
+                if (!product) {
+                    NotificationManager.show('Produk tidak ditemukan', 'error');
+                    return;
                 }
-            }
-        }
 
-        // Update cart count
-        function updateCartCount() {
-            const count = cart.reduce((total, item) => total + item.quantity, 0);
-            document.getElementById('cartCount').textContent = count;
-        }
-
-        // Toggle cart modal
-        function toggleCart() {
-            const modal = document.getElementById('cartModal');
-            modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
-            if (modal.style.display === 'block') {
-                displayCartItems();
-            }
-        }
-
-        // Display cart items
-        function displayCartItems() {
-            const cartItemsDiv = document.getElementById('cartItems');
-            const cartTotalSpan = document.getElementById('cartTotal');
-
-            if (cart.length === 0) {
-                cartItemsDiv.innerHTML = `
-                    <div class="empty-cart">
-                        <i class="fas fa-shopping-cart"></i>
-                        <h3>Keranjang Belanja Kosong</h3>
-                        <p>Yuk mulai belanja furniture impian Anda!</p>
-                    </div>
-                `;
-                cartTotalSpan.textContent = '0';
-                return;
-            }
-
-            let total = 0;
-            cartItemsDiv.innerHTML = '';
-
-            cart.forEach(item => {
-                total += item.price * item.quantity;
-                const cartItem = document.createElement('div');
-                cartItem.className = 'cart-item';
-                cartItem.innerHTML = `
-                    <div class="cart-item-image">${item.image}</div>
-                    <div class="cart-item-info">
-                        <div class="cart-item-title">${item.title}</div>
-                        <div class="cart-item-price">Rp ${item.price.toLocaleString()}</div>
-                    </div>
-                    <div class="cart-item-controls">
-                        <div class="quantity-controls">
-                            <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                            <span class="quantity-display">${item.quantity}</span>
-                            <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                        </div>
-                        <button class="remove-btn" onclick="removeFromCart(${item.id})" title="Hapus dari keranjang">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                `;
-                cartItemsDiv.appendChild(cartItem);
-            });
-
-            cartTotalSpan.textContent = total.toLocaleString();
-        }
-
-        // Buy now function
-        function buyNow(productId) {
-            const product = products.find(p => p.id === productId);
-            const message = `Halo Gaco! 🛋️
+                const message = `Halo ${CONFIG.COMPANY_NAME}! 🛋️
 
 Saya tertarik untuk membeli:
 📦 ${product.title}
-💰 Harga: Rp ${product.price.toLocaleString()}
+💰 Harga: Rp ${instance.formatPrice(product.price)}
 
 Mohon informasi lebih lanjut mengenai:
 • Ketersediaan stok
@@ -1344,125 +1335,347 @@ Mohon informasi lebih lanjut mengenai:
 
 Terima kasih! 🙏`;
 
-            const whatsappUrl = `https://wa.me/6288223055352?text=${encodeURIComponent(message)}`;
-            window.open(whatsappUrl, '_blank');
-        }
-
-        // Checkout function
-        function checkout() {
-            if (cart.length === 0) {
-                showNotification('Keranjang belanja masih kosong!', 'error');
-                return;
+                WhatsAppManager.sendMessage(message);
             }
 
-            let message = `Halo Gaco! 🛋️
+            setupEventListeners() {
+                // Add event delegation for dynamic content
+                document.getElementById('productsGrid').addEventListener('click', (e) => {
+                    const addButton = e.target.closest('.btn-primary');
+                    if (addButton && addButton.dataset.productId) {
+                        this.addLoadingState(addButton);
+                    }
+                });
+            }
+
+            addLoadingState(button) {
+                const originalContent = button.innerHTML;
+                button.innerHTML = '<div class="loading"></div>';
+                button.disabled = true;
+                
+                setTimeout(() => {
+                    button.innerHTML = originalContent;
+                    button.disabled = false;
+                }, 800);
+            }
+        }
+
+        // Cart Manager Class
+        class CartManager {
+            constructor() {
+                this.cart = [];
+            }
+
+            static getInstance() {
+                if (!CartManager.instance) {
+                    CartManager.instance = new CartManager();
+                }
+                return CartManager.instance;
+            }
+
+            addToCart(productId) {
+                const product = ProductManager.getInstance().getProductById(productId);
+                if (!product) {
+                    NotificationManager.show('Produk tidak ditemukan', 'error');
+                    return;
+                }
+
+                const existingItem = this.cart.find(item => item.id === productId);
+                
+                if (existingItem) {
+                    existingItem.quantity += 1;
+                } else {
+                    this.cart.push({...product, quantity: 1});
+                }
+
+                this.updateCartCount();
+                NotificationManager.show(`${product.title} berhasil ditambahkan ke keranjang!`);
+            }
+
+            removeFromCart(productId) {
+                const product = this.cart.find(item => item.id === productId);
+                if (!product) return;
+
+                this.cart = this.cart.filter(item => item.id !== productId);
+                this.updateCartCount();
+                this.displayCartItems();
+                NotificationManager.show(`${product.title} dihapus dari keranjang`, 'info');
+            }
+
+            updateQuantity(productId, change) {
+                const item = this.cart.find(item => item.id === productId);
+                if (!item) return;
+
+                item.quantity += change;
+                
+                if (item.quantity <= 0) {
+                    this.removeFromCart(productId);
+                } else {
+                    this.updateCartCount();
+                    this.displayCartItems();
+                }
+            }
+
+            updateCartCount() {
+                const count = this.cart.reduce((total, item) => total + item.quantity, 0);
+                const cartCountElement = document.getElementById('cartCount');
+                if (cartCountElement) {
+                    cartCountElement.textContent = count;
+                }
+            }
+
+            toggleCart() {
+                const modal = document.getElementById('cartModal');
+                const isVisible = modal.style.display === 'block';
+                
+                modal.style.display = isVisible ? 'none' : 'block';
+                
+                if (!isVisible) {
+                    this.displayCartItems();
+                }
+            }
+
+            displayCartItems() {
+                const cartItemsDiv = document.getElementById('cartItems');
+                const cartTotalSpan = document.getElementById('cartTotal');
+
+                if (this.cart.length === 0) {
+                    cartItemsDiv.innerHTML = `
+                        <div class="empty-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                            <h3>Keranjang Belanja Kosong</h3>
+                            <p>Yuk mulai belanja furniture impian Anda!</p>
+                        </div>
+                    `;
+                    cartTotalSpan.textContent = '0';
+                    return;
+                }
+
+                let total = 0;
+                cartItemsDiv.innerHTML = '';
+
+                this.cart.forEach(item => {
+                    total += item.price * item.quantity;
+                    const cartItem = this.createCartItemElement(item);
+                    cartItemsDiv.appendChild(cartItem);
+                });
+
+                cartTotalSpan.textContent = ProductManager.getInstance().formatPrice(total);
+            }
+
+            createCartItemElement(item) {
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                cartItem.innerHTML = `
+                    <div class="cart-item-image">${item.image}</div>
+                    <div class="cart-item-info">
+                        <div class="cart-item-title">${item.title}</div>
+                        <div class="cart-item-price">Rp ${ProductManager.getInstance().formatPrice(item.price)}</div>
+                    </div>
+                    <div class="cart-item-controls">
+                        <div class="quantity-controls">
+                            <button class="quantity-btn" onclick="CartManager.getInstance().updateQuantity(${item.id}, -1)">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <span class="quantity-display">${item.quantity}</span>
+                            <button class="quantity-btn" onclick="CartManager.getInstance().updateQuantity(${item.id}, 1)">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                        <button class="remove-btn" onclick="CartManager.getInstance().removeFromCart(${item.id})" title="Hapus dari keranjang">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                return cartItem;
+            }
+
+            checkout() {
+                if (this.cart.length === 0) {
+                    NotificationManager.show('Keranjang belanja masih kosong!', 'error');
+                    return;
+                }
+
+                let message = `Halo ${CONFIG.COMPANY_NAME}! 🛋️
 
 Saya ingin memesan furniture berikut:
 
 `;
-            let total = 0;
+                let total = 0;
 
-            cart.forEach((item, index) => {
-                message += `${index + 1}. ${item.title}\n`;
-                message += `   Quantity: ${item.quantity} pcs\n`;
-                message += `   Harga satuan: Rp ${item.price.toLocaleString()}\n`;
-                message += `   Subtotal: Rp ${(item.price * item.quantity).toLocaleString()}\n\n`;
-                total += item.price * item.quantity;
-            });
+                this.cart.forEach((item, index) => {
+                    const subtotal = item.price * item.quantity;
+                    message += `${index + 1}. ${item.title}\n`;
+                    message += `   Quantity: ${item.quantity} pcs\n`;
+                    message += `   Harga satuan: Rp ${ProductManager.getInstance().formatPrice(item.price)}\n`;
+                    message += `   Subtotal: Rp ${ProductManager.getInstance().formatPrice(subtotal)}\n\n`;
+                    total += subtotal;
+                });
 
-            message += `💰 TOTAL KESELURUHAN: Rp ${total.toLocaleString()}\n\n`;
-            message += `Mohon konfirmasi pesanan dan informasi mengenai:\n`;
-            message += `• Proses pembayaran\n`;
-            message += `• Estimasi pengiriman\n`;
-            message += `• Instalasi (jika diperlukan)\n\n`;
-            message += `Terima kasih! 🙏`;
+                message += `💰 TOTAL KESELURUHAN: Rp ${ProductManager.getInstance().formatPrice(total)}\n\n`;
+                message += `Mohon konfirmasi pesanan dan informasi mengenai:\n`;
+                message += `• Proses pembayaran\n`;
+                message += `• Estimasi pengiriman\n`;
+                message += `• Instalasi (jika diperlukan)\n\n`;
+                message += `Terima kasih! 🙏`;
 
-            const whatsappUrl = `https://wa.me/6288223055352?text=${encodeURIComponent(message)}`;
-            window.open(whatsappUrl, '_blank');
+                WhatsAppManager.sendMessage(message);
+            }
         }
 
-        // Show notification
-        function showNotification(message, type = 'success') {
-            const notification = document.createElement('div');
-            notification.className = 'notification';
-            
-            if (type === 'error') {
-                notification.style.background = 'linear-gradient(45deg, #e74c3c, #c0392b)';
-            } else if (type === 'info') {
-                notification.style.background = 'linear-gradient(45deg, #3498db, #2980b9)';
+        // WhatsApp Manager Class
+        class WhatsAppManager {
+            static sendMessage(message) {
+                const encodedMessage = encodeURIComponent(message);
+                const whatsappUrl = `https://wa.me/${CONFIG.PHONE_NUMBER}?text=${encodedMessage}`;
+                window.open(whatsappUrl, '_blank');
             }
-            
-            notification.innerHTML = `
-                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-triangle' : 'info-circle'}"></i>
-                ${message}
-            `;
-            
-            document.body.appendChild(notification);
+        }
 
-            setTimeout(() => {
-                if (document.body.contains(notification)) {
-                    document.body.removeChild(notification);
+        // Notification Manager Class
+        class NotificationManager {
+            static show(message, type = 'success') {
+                const notification = document.createElement('div');
+                notification.className = 'notification';
+                
+                // Set notification style based on type
+                const styles = {
+                    success: 'linear-gradient(45deg, #2ecc71, #27ae60)',
+                    error: 'linear-gradient(45deg, #e74c3c, #c0392b)',
+                    info: 'linear-gradient(45deg, #3498db, #2980b9)',
+                    warning: 'linear-gradient(45deg, #f39c12, #e67e22)'
+                };
+
+                const icons = {
+                    success: 'check-circle',
+                    error: 'exclamation-triangle',
+                    info: 'info-circle',
+                    warning: 'exclamation-triangle'
+                };
+                
+                notification.style.background = styles[type] || styles.success;
+                notification.innerHTML = `
+                    <i class="fas fa-${icons[type] || icons.success}"></i>
+                    ${message}
+                `;
+                
+                document.body.appendChild(notification);
+
+                // Auto remove notification
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 3000);
+            }
+        }
+
+        // UI Manager Class
+        class UIManager {
+            static init() {
+                this.setupSmoothScrolling();
+                this.setupModalHandling();
+                this.setupHeaderScrollEffect();
+                this.setupKeyboardShortcuts();
+            }
+
+            static setupSmoothScrolling() {
+                document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                    anchor.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        const target = document.querySelector(this.getAttribute('href'));
+                        if (target) {
+                            target.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        }
+                    });
+                });
+            }
+
+            static setupModalHandling() {
+                // Close modal when clicking outside
+                window.addEventListener('click', (event) => {
+                    const modal = document.getElementById('cartModal');
+                    if (event.target === modal) {
+                        CartManager.getInstance().toggleCart();
+                    }
+                });
+            }
+
+            static setupHeaderScrollEffect() {
+                let lastScrollY = window.scrollY;
+                
+                window.addEventListener('scroll', () => {
+                    const header = document.querySelector('header');
+                    const currentScrollY = window.scrollY;
+                    
+                    if (currentScrollY > 100) {
+                        header.style.backgroundColor = 'rgba(139, 69, 19, 0.95)';
+                        header.style.backdropFilter = 'blur(15px)';
+                    } else {
+                        header.style.backgroundColor = '';
+                        header.style.backdropFilter = 'blur(10px)';
+                    }
+                    
+                    lastScrollY = currentScrollY;
+                });
+            }
+
+            static setupKeyboardShortcuts() {
+                document.addEventListener('keydown', (e) => {
+                    // Escape key closes modal
+                    if (e.key === 'Escape') {
+                        const modal = document.getElementById('cartModal');
+                        if (modal.style.display === 'block') {
+                            CartManager.getInstance().toggleCart();
+                        }
+                    }
+                    
+                    // Ctrl/Cmd + K for search focus
+                    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                        e.preventDefault();
+                        const searchInput = document.getElementById('searchInput');
+                        if (searchInput) {
+                            searchInput.focus();
+                            searchInput.select();
+                        }
+                    }
+                });
+            }
+        }
+
+        // Application Initialization
+        class App {
+            static init() {
+                // Wait for DOM to be fully loaded
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', () => {
+                        this.initializeApp();
+                    });
+                } else {
+                    this.initializeApp();
                 }
-            }, 3000);
-        }
-
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('cartModal');
-            if (event.target === modal) {
-                modal.style.display = 'none';
             }
-        }
 
-        // Keyboard shortcuts
-        document.addEventListener('keydown', function(e) {
-            // Escape key closes modal
-            if (e.key === 'Escape') {
-                const modal = document.getElementById('cartModal');
-                if (modal.style.display === 'block') {
-                    modal.style.display = 'none';
+            static initializeApp() {
+                try {
+                    // Initialize all managers
+                    ProductManager.getInstance().init();
+                    CartManager.getInstance().updateCartCount();
+                    UIManager.init();
+                    
+                    console.log('Gaco Furniture website initialized successfully');
+                } catch (error) {
+                    console.error('Error initializing application:', error);
+                    NotificationManager.show('Terjadi kesalahan saat memuat aplikasi', 'error');
                 }
             }
-        });
-
-        // Add some interactive elements
-        document.addEventListener('scroll', function() {
-            const header = document.querySelector('header');
-            if (window.scrollY > 100) {
-                header.style.backgroundColor = 'rgba(139, 69, 19, 0.95)';
-            } else {
-                header.style.backgroundColor = '';
-            }
-        });
-
-        // Loading state for buttons
-        function addLoadingState(button) {
-            const originalContent = button.innerHTML;
-            button.innerHTML = '<div class="loading"></div>';
-            button.disabled = true;
-            
-            setTimeout(() => {
-                button.innerHTML = originalContent;
-                button.disabled = false;
-            }, 1000);
         }
 
-        // Add loading to cart buttons
-        document.addEventListener('click', function(e) {
-            if (e.target.closest('.btn-primary') && e.target.closest('.product-actions')) {
-                addLoadingState(e.target.closest('.btn-primary'));
-            }
-        });
+        // Start the application
+        App.init();
     </script>
 </body>
-</html>-award" style="font-size: 3rem; color: #8B4513; margin-bottom: 1rem;"></i>
-                    <h3 style="color: #2c3e50; margin-bottom: 1rem;">Kualitas Premium</h3>
-                    <p style="color: #7f8c8d;">Menggunakan bahan berkualitas tinggi dan craftsmanship terbaik</p>
-                </div>
-                <div style="text-align: center; padding: 2rem;">
-                    <i class="fas fa-truck" style="font-size: 3rem; color: #8B4513; margin-bottom: 1rem;"></i>
-                    <h3 style="color: #2c3e50; margin-bottom: 1rem;">Pengiriman Aman</h3>
-                    <p style="color: #7f8c8d;">Jaminan pengiriman aman ke seluruh Indonesia</p>
-                </div>
-                <div style="text-align: center; padding: 2rem;">
-                    <i class="fas fa
+</html>
